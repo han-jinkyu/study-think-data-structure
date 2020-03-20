@@ -52,5 +52,13 @@ public class ListClient {
 }
 ```
 
+## 실습
+ListClientExampleTest를 통하여 테스트를 해보면 ArrayList가 아니면 에러가 난다.
+ListClientExample의 Constructor 부분에 정의된 LinkedList를 ArrayList로 바꾼다.
+
+- 반환부의 List를 바꾸지 않았지만 에러가 나지 않는다.
+- 반환부의 List를 ArrayList로 바꾼다면 '과다 지정(overspecified)'가 된다
+- 이는 다시 인터페이스로 돌아가기 위해선 많은 비용이 소요된다
+
 ---
 [Home](../README.md)
