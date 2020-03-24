@@ -74,6 +74,17 @@ public class SelectionSort {
     - indexLowest는 선형이고 swapElements는 상수.
     - 반복하면서 선형 메서드인 indexLowest를 실행하므로 `이차`다.
     
+## 빅오 표기법
+
+|           종류          | 빅오 표기법 |
+|------------------------|:--------:|
+| 상수시간 (constant time) | O(1)     |
+| 선형 (linear)           | O(n)     |
+| 이차 (quadratic)        | O(n^2)   |
+
+서로 섞여있다면 제일 큰 차수로 표현된다. 예를 들어, `상수시간`과 `선형`이 같이 존재하면 
+이는 `선형`이 된다.
+
 
 ---
 [Home](../README.md)
