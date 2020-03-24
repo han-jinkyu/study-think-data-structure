@@ -85,6 +85,56 @@ public class SelectionSort {
 서로 섞여있다면 제일 큰 차수로 표현된다. 예를 들어, `상수시간`과 `선형`이 같이 존재하면 
 이는 `선형`이 된다.
 
+## 실습
+다음의 클래스에서 다음의 메서드를 구현한다. 그리고 테스트를 통과하면 된다.
+
+- MyArrayList.java
+- MyArrayListTest.java
+
+```java
+@Override
+public boolean add(T element) {
+    if (size >= array.length) {
+        T[] bigger = (T[])new Object[size * 2];
+        System.arraycopy(array, 0, bigger, 0, array.length);
+        array = bigger;
+    }
+    array[size++] = element;
+    return true;
+}
+```
+    
+```java
+@Override
+public int indexOf(Object target) {
+    for (int i = 0; i < size; i++) {
+        boolean equals = Objects.equals(target, get(i));
+        if (equals) return i;
+    }
+    return -1;
+}
+```
+
+```java
+@Override
+public T remove(int index) {
+    T old = array[index];
+    for (int i = index; i < size - 1; i++) {
+        array[i] = array[i + 1];
+    }
+    size--;
+    return old;
+}
+```
+
+```java
+@Override
+public T set(int index, T element) {
+    T old = get(index);
+    array[index] = element;
+    return old;
+}
+```
 
 ---
 [Home](../README.md)
