@@ -56,5 +56,69 @@ remove는 반복문 이외에는 상수시간이다. 반복문 안의 내용 역
 반복문은 운이 좋으면 마지막 데이터 하나, 운이 나쁘면 (전체 데이터 - 1)개를 테스트한다.
 따라서 배열이 커지면 이에 따라 테스트할 데이터도 많아지므로 `선형`이다.
 
+### removeAll
+```java
+public boolean removeAll(Collection<?> collection) {
+    boolean flag = true;
+    for (Object obj: collection) {
+        flag &= remove(obj);
+    }
+    return flag;
+}
+```
+이 메서드는 remove라는 선형 메서드를 호출한다.
+만약 collection의 요소 개수를 m, MyArrayList의 배열의 요소 개수를 n이라고 가정한다면 
+이 메서드는 O(nm)이다.
+ 
+- m이 상수(고정)이라면 n에 대해 `선형`이다.
+- m이 n에 비례한다면 이 메서드는 `이차`다
+
+`문제 크기 (Problem size)`에 대한 이야기할 때 대상이 어떤 크기들인지에 주의해야 한다.
+반복문만 세는 것으로는 정확한 분석을 할 수 없다.
+
+### add
+```java
+public void add(int index, T element) {
+    if (index < 0 || index > size) {
+        throw new IndexOutOfBoundsException();
+    }
+    // add the element to get the resizing
+    add(element);
+
+    // shift the elements
+    for (int i=size-1; i>index; i--) {
+        array[i] = array[i-1];
+    }
+    // put the new one in the right place
+    array[index] = element;
+}
+```
+add 메서드 중 첫번째는 오버로딩되어 있는 add가 있고, 반복문이 존재한다. 이외는 선형시간.
+따라서 또 다른 add 메서드를 제외하면 `선형`으로 볼 수 있다. 
+
+```java
+public boolean add(T element) {
+    if (size >= array.length) {
+        T[] bigger = (T[])new Object[size * 2];
+        System.arraycopy(array, 0, bigger, 0, array.length);
+        array = bigger;
+    }
+    array[size++] = element;
+    return true;
+}
+```
+또 다른 add 메서드는 System.arraycopy가 배열의 크기에 따라 달라지고
+그 이외는 상수시간이므로, 이 메서드는 `선형`으로 볼 수 있다.
+
+add는 총 연산횟수가 `2n-2`다. 
+이의 평균횟수를 구하려면 데이터 개수인 n으로 나누어서 `2 - 2/n`이 된다.
+따라서 이 원칙을 적용하면 가장 큰 차수는 2이므로 add는 상수시간으로 평가할 수 있다.
+이런 방식을 `분할 상환 방식`라고 부른다.
+
+## 분할 상환 분석 (Amortized analysis)
+일련의 호출에서 평균 시간을 계산하는 알고리즘 분류 방법을 `분할 상환 분석`이라 한다.
+일련의 호출을 하는 동안 배열을 복사하는 추가 비용이 분산되거나 분할 상환되었다는 의미라 한다. 
+[위키 참조](https://ko.wikipedia.org/wiki/분할상환분석)
+
 ---
 [Home](../README.md)
