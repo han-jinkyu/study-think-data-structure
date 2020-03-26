@@ -115,10 +115,57 @@ add는 총 연산횟수가 `2n-2`다.
 따라서 이 원칙을 적용하면 가장 큰 차수는 2이므로 add는 상수시간으로 평가할 수 있다.
 이런 방식을 `분할 상환 방식`라고 부른다.
 
-## 분할 상환 분석 (Amortized analysis)
+### 분할 상환 분석 (Amortized analysis)
 일련의 호출에서 평균 시간을 계산하는 알고리즘 분류 방법을 `분할 상환 분석`이라 한다.
 일련의 호출을 하는 동안 배열을 복사하는 추가 비용이 분산되거나 분할 상환되었다는 의미라 한다. 
 [위키 참조](https://ko.wikipedia.org/wiki/분할상환분석)
 
+## 연결 자료 구조
+`연결`이라는 것은 노드(Node)라는 객체가 다른 노드에 대한 참조를 포함한 형태로 저장하는 것을 뜻한다.
+연결리스트에서 각 노드는 리스트의 다음 노드를 참조하고 있다. 연결 구조의 다른 예로는 `트리`와 `그래프`가 있다.
+
+```java
+public class ListNode {
+    public Object data;
+    public ListNode next;
+
+    public ListNode() {
+        this.data = null;
+        this.next = null;
+    }
+    
+    public ListNode(Object data) {
+        this.data = data;
+        this.next = null;
+    }
+
+    public ListNode(Object data, ListNode next) {
+        this.data = data;
+        this.next = next;
+    }
+    
+    public String toString() {
+        return String.format("ListNode(%s)", data.toString());
+    }
+}
+``` 
+1. ListNode에는 두 개의 인스턴스 변수가 존재한다.
+    - data 변수는 어떤 Object의 참조
+    - next 변수는 리스트에서 다음 노드에 대한 참조다.
+ 
+1. 리스트의 마지막 노드에서 관례상 next 변수는 null이다.
+1. 리스트 생성은 간단하게 다음과 같다.
+    ```java
+    ListNode node1 = new ListNode(1);
+    ListNode node2 = new ListNode(2);
+    ListNode node3 = new ListNode(3);
+    
+    node1.next = node2;
+    node2.next = node3;
+    node3.next = null;
+    
+    ListNode node0 = new ListNode(0, node1);
+    System.out.println(node0);
+    ```
 ---
 [Home](../README.md)
