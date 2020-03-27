@@ -167,5 +167,67 @@ public class ListNode {
     ListNode node0 = new ListNode(0, node1);
     System.out.println(node0);
     ```
+   
+## 실습
+- MyLinkedList.java
+- MyLinkedListTest.java
+
+```java
+@Override
+public void add(int index, E element) {
+    if (index < 0 || size < index) {
+        throw new IndexOutOfBoundsException();
+    }
+
+    if (element == null) {
+        throw new NullPointerException();
+    }
+
+    if (index == 0) {
+        // head
+        head = new Node(element, head);
+    } else {
+        Node prev = getNode(index - 1);
+        prev.next = new Node(element, prev.next);
+    }
+    size++;
+}
+```
+
+```java
+@Override
+public int indexOf(Object target) {
+    Node node = head;
+    for (int i = 0; i < size; i++) {
+        if (equals(target, node.data)) {
+            return i;
+        }
+        node = node.next;
+    }
+    return -1;
+}
+```
+
+```java
+@Override
+public E remove(int index) {
+    if (index < 0 || size <= index) {
+        throw new IndexOutOfBoundsException();
+    }
+
+    Node old;
+    if (index == 0) {
+        old = head;
+        head = old.next;
+    } else {
+        Node prev = getNode(index - 1);
+        old = prev.next;
+        prev.next = old.next;
+    }
+    size--;
+    return old.data;
+}
+```
+
 ---
 [Home](../README.md)
