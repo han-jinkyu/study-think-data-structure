@@ -82,16 +82,7 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
-		if (index < 0 || size < index) {
-			throw new IndexOutOfBoundsException();
-		}
-
-		if (element == null) {
-			throw new NullPointerException();
-		}
-
 		if (index == 0) {
-			// head
 			head = new Node(element, head);
 		} else {
 			Node prev = getNode(index - 1);
@@ -229,10 +220,6 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		if (index < 0 || size <= index) {
-			throw new IndexOutOfBoundsException();
-		}
-
 		Node old;
 		if (index == 0) {
 			old = head;
