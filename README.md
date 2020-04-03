@@ -8,7 +8,7 @@ https://github.com/yudong80/ThinkDataStructures
 1. [인터페이스](docs/01-interface.md)
 2. [알고리즘 분석](docs/02-analysis.md)
 3. [ArrayList 클래스](docs/03-array_list.md)
-4. LinkedList 클래스
+4. [LinkedList 클래스](docs/04-linked_list.md)
 5. 이중 연결 리스트
 6. 트리 순회
 7. 철학으로 가는 길
