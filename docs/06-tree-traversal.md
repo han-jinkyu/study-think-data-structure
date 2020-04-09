@@ -68,5 +68,35 @@ for (Node node: iter) {
 }
 ```
 
+위는 텍스트 노드만 출력하게 하고 다른 노드(예를 들면 Element)는 무시하므로 결과는 텍스트만 출력하게 된다.
+
+## 깊이 우선 탐색
+트리를 탐색하는 방법 중 하나인 깊이 우선 탐색(Depth-First Search; DFS)에 대하 알아본다.
+
+- 트리의 루트에서 시작하여 첫 번째 자식 노드를 탐색한다. 
+- 자식이 자식을 가지고 있다면 다시 첫 번째 자식을 탐색한다. 
+- 자식이 없는 노드에 도달하면 부모 노드를 거슬러 올라가 그 다음 두 번째 자식을 탐색한다. 
+    - 만약 자식이 없으면 다시 부모로 거슬러 올라간다. 
+- 루트의 마지막 노드까지 탐색하면 종료한다.
+
+DFS 구현방법은 `재귀적 방법`과 `반복적 방법`이 존재한다.
+
+```java
+private static void recursiveDFS(Node node) {
+    if (node instanceof TextNode) {
+        System.out.print(node);
+    }
+    for (Node child: node.childNodes()) {
+        recursiveDFS(child);
+    }
+}
+```
+재귀적 방법은 구현이 간단하다. 루트부터 시작하여 자신이 TextNode라면 출력하고 자식이 존재한다면 자식을 순서대로 각각 recursiveDFS를 호출하게 하면 된다.
+
+자식 노드를 탐색하기 전에 내용을 출력하므로 전위 순회(Pre-order)에 해당한다. [Wiki참조](https://ko.wikipedia.org/wiki/트리_순회)
+
+재귀적 호출을 하면 recursiveDFS 메서드는 `호출 스택(Callstack)`을 사용하여 자식 노드를 추적하고 올바른 순서로 자식 노드를 처리한다. 
+따라서 대안으로 `스택(Stack)` 자료구조를 사용하여 노드를 추적할 수도 있다.
+
 ---
 [Home](../README.md)
