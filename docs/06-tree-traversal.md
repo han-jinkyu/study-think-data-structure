@@ -98,5 +98,55 @@ private static void recursiveDFS(Node node) {
 재귀적 호출을 하면 recursiveDFS 메서드는 `호출 스택(Callstack)`을 사용하여 자식 노드를 추적하고 올바른 순서로 자식 노드를 처리한다. 
 따라서 대안으로 `스택(Stack)` 자료구조를 사용하여 노드를 추적할 수도 있다.
 
+## 스택
+리스트와 유사한 자료구조로, 요소의 순서를 유지하는 컬렉션이다. 일반적으로 스택이 제공하는 메서드는 다음과 같다. 
+
+- push : 스택의 최상단에 요소를 추가
+- pop : 스택의 최상단에 있는 요소를 제거하고 반환한다
+- peek : 최상단의 요소를 반환하지만 스택을 수정하지는 않는다
+- isEmpty : 스택이 비어 있는지 알려준다
+
+pop 메서드는 항상 최상단의 요소를 반환하므로 후입선출(Last In, First Out; LIFO)로도 불린다. 반면 큐(Queue)는 입력한 순서대로 요소를 반환하므로 선입선출(First In, First Out; FIFO)로 불린다.
+
+자바로 스택을 구현하는 데는 3가지 선택사항이 존재한다.
+
+1. 기존 ArrayList나 LinkedList 클래스를 사용한다. ArrayList를 사용한다면 요소의 맨 끝에 넣고 제거해야 한다. 이 작업은 상수 시간이기 때문이다.
+1. Stack 클래스를 사용하여 스택 메서드의 표준 구현을 사용한다. 하지만 이 클래스는 오래된 자바 버전이므로 이후에 나온 JCF와 일치하지 않는다.
+1. 가장 좋은 방법인 ArrayDeque 클래스 같은 Deque 인터페이스를 구현한 클래스를 사용한다.
+
+`Deque(Double Ended Queue; 발음 Deck)`는 '양쪽에 끝이 있는 큐'다. Deque 인터페이스는 push, pop, peek, isEmpty 메서드를 제공하므로 `Deque을 스택으로 사용`할 수 있다.
+
+## 반복적 DFS
+다음은 ArrayDeque을 사용하여 Node 객체의 스택을 표현하는 반복적 DFS다. (WikiNodeExample.java)
+
+```java
+private static void iterativeDFS(Node root) {
+    Deque<Node> stack = new ArrayDeque<Node>();
+    stack.push(root);
+
+    // if the stack is empty, we're done
+    while (!stack.isEmpty()) {
+
+        // otherwise pop the next Node off the stack
+        Node node = stack.pop();
+        if (node instanceof TextNode) {
+            System.out.print(node);
+        }
+
+        // push the children onto the stack in reverse order
+        List<Node> nodes = new ArrayList<Node>(node.childNodes());
+        Collections.reverse(nodes);
+        
+        for (Node child: nodes) {
+            stack.push(child);
+        }
+    }
+}
+```
+
+- 반복적 DFS의 장점은 자바 Iterator로 구현하기 쉽다는 점이다.
+- Deque 인터페이스는 ArrayDeque 말고도 다른 클래스를 제공한다.
+    - LinkedList는 List와 Deque 인터페이스를 둘 다 구현한다.
+    
 ---
 [Home](../README.md)
