@@ -1,0 +1,93 @@
+# 7. 철학으로 가는 길
+
+## 목표
+'철학으로 가는 길' 추측을 테스트하는 웹 크롤러를 개발한다.
+
+- WikiNodeExample.java
+    - DOM 트리에서 재귀적 방법과 반복적 방법으로 DFS를 구현한 코드를 담고 있다.
+- WikiNodeIterable.java
+    - DOM 트리를 탐색하는 Iterable 클래스를 포함한다.
+- WikiFetcher.java
+    - jsoup 라이브러리를 활용하여 위키피디아 페이지를 다운로드하는 유틸리티 클래스.
+- WikiPhilosophy.java
+    - 이번 예제에서 작성할 코드의 개요를 담고 있다.
+    
+## Iterable과 Iterator
+재귀적 DFS와 비교할 때 반복적 DFS의 이점은 Iterator 객체로 래핑하기 좋다는 것이다.
+WikiNodeIterable.java를 살펴보면 WikiNodeIterable은 Iterable<Node> 인터페이스를 구현하고 있다. 따라서 다음과 같이 반복문에 사용할 수 있다.
+
+```java
+Node root = ...
+Iterable<Node> iter = new WikiNodeIterable(root);
+for (Node node : iter) {
+    visit(node);
+}
+```
+
+WikiNodeIterable 클래스의 구현은 전통적인 공식을 따른다.
+
+1. 생성자는 루트 노드에 대한 참조를 인자로 받아 저장한다.
+2. iterator 메서드는 Iterator 객체를 생성하여 반환한다.
+
+```java
+public class WikiNodeIterable implements Iterable<Node> {
+    private Node root;
+    
+    public WikiNodeIterable(Node root) {
+        this.root = root;
+    }
+
+    @Override
+    public Iterator<Node> iterator()  {
+        return new WikiNodeIterator(root);
+    }
+}
+```
+
+내부 클래스인 WikiNodeIterator가 실제 모든 작업을 수행한다.
+
+```java
+private class WikiNodeIterator implements Iterator<Node> {
+    Deque<Node> stack;
+
+    public WikiNodeIterator(Node node) {
+        stack = new ArrayDeque<Node>();
+        stack.push(root);
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+
+    @Override
+    public Node next() {
+        if (stack.isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
+        Node node = stack.pop();
+        List<Node> nodes = new ArrayList<Node>(node.childNodes());
+        Collections.reverse(nodes);
+        for (Node child: nodes) {
+            stack.push(child);
+        }
+        return node;
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+}
+``` 
+
+이 클래스는 메서드 3개로 나뉘게 된다.
+
+1. 생성자는 스택(ArrayDeque)을 초기화하고 그 안에 루트 노드를 추가한다.
+2. isEmpty 메서드는 스택이 비었는지 확인힌다.
+3. next 메서드는 스택에서 다음 노드를 pop하고 자식 노드들은 역순으로 스택에 push한 후 pop한 node를 반환한다. 누군가 빈 Iterator에서 next 메서드를 호출하면 예외를 던진다.
+
+
+---
+[Home](../README.md)
