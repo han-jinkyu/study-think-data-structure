@@ -1,10 +1,13 @@
 package com.allendowney.thinkdast;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 public class WikiPhilosophy {
@@ -40,6 +43,51 @@ public class WikiPhilosophy {
      * @throws IOException
      */
     public static void testConjecture(String destination, String source, int limit) throws IOException {
-        // TODO: FILL THIS IN!
+        URL url = new URL(source);
+        String host = String.format("%s://%s", url.getProtocol(), url.getHost());
+
+        WikiFetcher wf = new WikiFetcher();
+
+        String target = source;
+        int count = 0;
+        while (!url.equals(destination) && count < limit) {
+            System.out.println(target);
+            Elements elems = wf.fetchWikipedia(target);
+
+            for (Element elem : elems) {
+                boolean found = false;
+                for (Node node : new WikiNodeIterable(elem)){
+                    // 1. 링크 아닌 노드 제거
+                    if (node instanceof TextNode) {
+                        continue;
+                    }
+
+                    if (!node.nodeName().equals("a")) {
+                        continue;
+                    }
+
+                    // 2. 이탤릭체 제거
+                    Node parent = node.parent();
+                    String parentName = parent.nodeName();
+                    if (parentName.equals("i") ||
+                        parentName.equals("em")) {
+                        continue;
+                    }
+
+                    // 첫번째 링크를 찾는다
+                    String link = host + node.attr("href");
+                    if (node.baseUri().equals(link)) {
+                        continue;
+                    }
+
+                    target = link;
+                    found = true;
+                    break;
+                }
+
+                if (found) break;
+            }
+            count++;
+        }
     }
 }
