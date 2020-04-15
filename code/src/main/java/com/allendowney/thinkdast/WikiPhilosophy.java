@@ -46,12 +46,17 @@ public class WikiPhilosophy {
         URL url = new URL(source);
         String host = String.format("%s://%s", url.getProtocol(), url.getHost());
 
-        WikiFetcher wf = new WikiFetcher();
-
         String target = source;
         int count = 0;
         while (!url.equals(destination) && count < limit) {
             System.out.println(target);
+            if (visited.contains(target)) {
+                System.err.println("In loop");
+                return;
+            } else {
+                visited.add(target);
+            }
+
             Elements elems = wf.fetchWikipedia(target);
 
             for (Element elem : elems) {
