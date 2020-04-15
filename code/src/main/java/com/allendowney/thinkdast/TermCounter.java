@@ -36,8 +36,7 @@ public class TermCounter {
 	 * @return
 	 */
 	public int size() {
-		// TODO: FILL THIS IN!
-		return 0;
+		return map.values().stream().mapToInt(i -> i).sum();
 	}
 
 	/**
