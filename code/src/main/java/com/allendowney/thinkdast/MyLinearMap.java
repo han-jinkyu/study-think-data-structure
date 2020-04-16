@@ -3,12 +3,7 @@
  */
 package com.allendowney.thinkdast;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of a Map using a List of entries, so most
@@ -63,8 +58,10 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 	 * @param target
 	 */
 	private Entry findEntry(Object target) {
-		// TODO: FILL THIS IN!
-		return null;
+		return entries.stream()
+				.filter(e -> equals(target, e.key))
+				.findFirst()
+				.orElse(null);
 	}
 
 	/**
@@ -98,8 +95,8 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V get(Object key) {
-		// TODO: FILL THIS IN!
-		return null;
+		Optional<Entry> maybeEntry = Optional.ofNullable(findEntry(key));
+		return maybeEntry.map(e -> e.value).orElse(null);
 	}
 
 	@Override
@@ -118,8 +115,14 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V put(K key, V value) {
-		// TODO: FILL THIS IN!
-		return null;
+		Entry entry = findEntry(key);
+		if (entry == null) {
+			entries.add(new Entry(key, value));
+			return null;
+		} else {
+			entry.setValue(value);
+			return entry.value;
+		}
 	}
 
 	@Override
@@ -131,8 +134,11 @@ public class MyLinearMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V remove(Object key) {
-		// TODO: FILL THIS IN!
-		return null;
+		Entry entry = findEntry(key);
+		if (entry == null) {
+			return null;
+		}
+		return entries.remove(entry) ? entry.value : null;
 	}
 
 	@Override
