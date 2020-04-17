@@ -14,7 +14,7 @@ https://github.com/yudong80/ThinkDataStructures
 7. [철학으로 가는 길](docs/07-getting-to-philosophy.md)
 8. [인덱서](docs/08-indexer.md)
 9. [Map 인터페이스](docs/09-interface_map.md)
-10. 해싱
+10. [해싱](docs/10-hashing.md)
 11. HashMap 클래스
 12. TreeMap 클래스
 13. 이진 탐색 트리
