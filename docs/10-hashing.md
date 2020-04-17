@@ -146,5 +146,15 @@ public class SillyArray {
 - 변경하면 해시 코드가 변형된다. 이렇게 되면 해시 코드가 달라서 잘못된 하위맵을 조회하게 된다.
 - 따라서 가변 객체를 키로 이용하는 것은 위험하다.
 
+## 실습
+- MyLinearMap.java
+- MyBetterMap.java
+- MyHashMap.java
+- MyLinearMapTest.java
+- MyBetterMapTest.java
+- MyHashMapTest.java
+- Profiler.java
+- ProfilerMapPut.java
+
 ---
 [Home](../README.md)
