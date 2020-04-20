@@ -3,8 +3,8 @@
  */
 package com.allendowney.thinkdast;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of a HashMap using a collection of MyLinearMap and
@@ -36,11 +36,14 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
 	/**
 	 * Doubles the number of maps and rehashes the existing entries.
 	 */
-	/**
-	 *
-	 */
 	protected void rehash() {
-		// TODO: FILL THIS IN!
+		Collection<Entry<K, V>> items = new ArrayList<>();
+		for (MyLinearMap<K, V> map : maps) {
+			items.addAll(map.getEntries());
+		}
+
+		makeMaps(maps.size() * 2);
+		items.forEach(item -> put(item.getKey(), item.getValue()));
 	}
 
 	/**
