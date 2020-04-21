@@ -61,5 +61,75 @@ n과 k가 같이 늘어나면서 MyBetterMap 클래스의 몇몇 핵심 메서�
 - 키가 아닌 값으로 검색해야 한다면 해싱이 그다지 도움이 되지 않는다는 것이다.
 - MyLinearMap에 존재했던 clear 같은 함수는 하위 맵에 비례하여 실행되므로 선형이 된다.
 
+## MyHashMap 프로파일링
+- MyHashMap::put을 프로파일링해보면 상수 시간이 아닌 값이 나옴
+    - 나의 경우는 `1.4792588212567526`
+- 이는 `성능 버그`를 의미한다고 한다.
+
+![myhashmap_put](./assets/myhashmap_put.png)
+
+## MyHashMap 클래스 고치기
+- put 메서드는 엔트리 개수가 증가함에 따라 하위맵도 증가한다.
+- 이 때 size 메서드를 호출하는데 이는 선형이다.
+```java
+@Override
+public int size() {
+    // add up the sizes of the sub-maps
+    int total = 0;
+    for (MyLinearMap<K, V> map: maps) {
+        total += map.size();
+    }
+    return total;
+}
+```
+
+- 따라서 put 역시 선형이 된다.
+- 간단한 해법으로는 엔트리 개수를 표현하는 인스턴스 변수를 선언하고 업데이트하는 것이다.
+- remove와 put 메서드는 상위 클래스의 메서드를 호출할 때 맵의 크기가 변한지 알 수 없다.
+    - remove는 하위맵이 갱신되면 사이즈만큼 빼고 다시 더한다.
+    - put도 마찬가지로 하위맵이 갱신되면 사이즈만큼 뺴고 다시 더한다.
+- 결과 개선되어 MyFixedHashMap::put은 프로파일링값이 `0.444755025850297`가 되었다.
+
+```java
+public class MyFixedHashMap<K, V> extends MyHashMap<K, V> implements Map<K, V> {
+
+	private int size = 0;
+
+	@Override
+	public void clear() {
+		super.clear();
+		size = 0;
+	}
+
+    @Override
+    public V put(K key, V value) {
+        MyLinearMap<K, V> map = chooseMap(key);
+        size -= map.size();
+        V oldValue = map.put(key, value);
+        size += map.size();
+
+        if (size() > maps.size() * FACTOR) {
+            size = 0;
+            rehash();
+        }
+        return oldValue;
+    }
+
+    @Override
+    public V remove(Object key) {
+        MyLinearMap<K, V> map = chooseMap(key);
+        size -= map.size();
+        V oldValue = map.remove(key);
+        size += map.size();
+        return oldValue;
+    }
+}
+``` 
+
+## UML 다이어그램
+- 머리가 꽉찬 화살표는 `HAS-A` 관계다. `A -> B`면 `A가 B를 갖고 있다`는 것이다.
+- 빈 머리와 실선 화살표는 `IS-A` 관계다. `A -> B`면 `A가 B를 확장한다`는 것이다.
+- 빈 머리와 점선 화살표는 `인터페이스 구현`을 의미한다. `A -> B`면 `A는 인터페이스 B를 구현한다`는 것이다. 
+
 ---
 [Home](../README.md)
