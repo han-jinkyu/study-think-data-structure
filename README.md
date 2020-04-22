@@ -16,7 +16,7 @@ https://github.com/yudong80/ThinkDataStructures
 9. [Map 인터페이스](docs/09-interface_map.md)
 10. [해싱](docs/10-hashing.md)
 11. [HashMap 클래스](docs/11-class_hash_map.md)
-12. TreeMap 클래스
+12. [TreeMap 클래스](docs/12-class_tree_map.md)
 13. 이진 탐색 트리
 14. 영속성
 15. 위키피디아 크롤링
