@@ -41,5 +41,136 @@ HashMap은 핵심 메서드 성능 때문에 널리 사용되지만 다른 Map �
 
 log n에 비례하는 시간이 걸리는 알고리즘을 로그 시간(logarithm 혹은 log time)이라고 한다. 증가 차수는 O(log n)에 해당한다.
 
+## 실습
+- MyTreeMap.java
+
+```java
+public class MyTreeMap<K, V> implements Map<K, V> {
+
+	private int size = 0;
+	private Node root = null;
+
+    @Override
+    public int size() {
+        return size;
+    }
+    
+    @Override
+    public void clear() {
+        size = 0;
+        root = null;
+    }
+}
+```
+
+- size는 확실하게 상수시간이다.
+- clear는 상수시간으로 보이나 root를 null로 설정할 때 가비지 콜렉터에서 수집할 때 선형시간이 걸린다.
+
+## TreeMap 구현
+- MyTreeMap.java
+- MyTreeMapTest.java
+
+```java
+private Node findNode(Object target) {
+    if (target == null) {
+        throw new IllegalArgumentException();
+    }
+
+    Comparable<? super K> k = (Comparable<? super K>) target;
+
+    Node node = root;
+
+    while (node != null) {
+        int compareTo = k.compareTo(node.key);
+        if (compareTo == 0) {
+            return node;
+        }
+
+        node = compareTo < 0 ? node.left : node.right;
+    }
+
+    return null;
+}
+```
+
+```java
+@Override
+public boolean containsValue(Object target) {
+    return containsValueHelper(root, target);
+}
+
+private boolean containsValueHelper(Node node, Object target) {
+    Deque<Node> stack = new ArrayDeque<>(size);
+
+    if (node != null) {
+        stack.push(node);
+    }
+
+    while (!stack.isEmpty()) {
+        Node n = stack.pop();
+
+        if (equals(n.value, target)) {
+            return true;
+        }
+
+        if (n.right != null) {
+            stack.push(n.right);
+        }
+
+        if (n.left != null) {
+            stack.push(n.left);
+        }
+    }
+
+    return false;
+}
+```
+
+```java
+@Override
+public V put(K key, V value) {
+    if (key == null) {
+        throw new NullPointerException();
+    }
+    if (root == null) {
+        root = new Node(key, value);
+        size++;
+        return null;
+    }
+    return putHelper(root, key, value);
+}
+
+private V putHelper(Node node, K key, V value) {
+    Comparable<? super K> k = (Comparable<? super K>)key;
+
+    while (node != null) {
+        int compareTo = k.compareTo(node.key);
+        if (compareTo == 0) {
+            V oldValue = node.value;
+            node.value = value;
+            return oldValue;
+        }
+
+        Node next = compareTo < 0 ? node.left : node.right;
+        if (next != null) {
+            node = next;
+            continue;
+        }
+
+        if (compareTo < 0)  {
+            node.left = new Node(key, value);
+        }
+        else {
+            node.right = new Node(key, value);
+        }
+
+        size++;
+        break;
+    }
+
+    return null;
+}
+```
+
 ---
 [Home](../README.md)

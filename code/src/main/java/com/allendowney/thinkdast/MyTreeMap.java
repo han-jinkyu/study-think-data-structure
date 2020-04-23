@@ -3,13 +3,7 @@
  */
 package com.allendowney.thinkdast;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of a Map using a binary search tree.
@@ -71,7 +65,17 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 		@SuppressWarnings("unchecked")
 		Comparable<? super K> k = (Comparable<? super K>) target;
 
-		// TODO: FILL THIS IN!
+		Node node = root;
+
+		while (node != null) {
+			int compareTo = k.compareTo(node.key);
+			if (compareTo == 0) {
+				return node;
+			}
+
+			node = compareTo < 0 ? node.left : node.right;
+		}
+
 		return null;
 	}
 
@@ -95,7 +99,28 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 
 	private boolean containsValueHelper(Node node, Object target) {
-		// TODO: FILL THIS IN!
+		Deque<Node> stack = new ArrayDeque<>(size);
+
+		if (node != null) {
+			stack.push(node);
+		}
+
+		while (!stack.isEmpty()) {
+			Node n = stack.pop();
+
+			if (equals(n.value, target)) {
+				return true;
+			}
+
+			if (n.right != null) {
+				stack.push(n.right);
+			}
+
+			if (n.left != null) {
+				stack.push(n.left);
+			}
+		}
+
 		return false;
 	}
 
@@ -139,7 +164,34 @@ public class MyTreeMap<K, V> implements Map<K, V> {
 	}
 
 	private V putHelper(Node node, K key, V value) {
-		// TODO: FILL THIS IN!
+		//noinspection unchecked
+		Comparable<? super K> k = (Comparable<? super K>)key;
+
+		while (node != null) {
+			int compareTo = k.compareTo(node.key);
+			if (compareTo == 0) {
+				V oldValue = node.value;
+				node.value = value;
+				return oldValue;
+			}
+
+			Node next = compareTo < 0 ? node.left : node.right;
+			if (next != null) {
+				node = next;
+				continue;
+			}
+
+			if (compareTo < 0)  {
+				node.left = new Node(key, value);
+			}
+			else {
+				node.right = new Node(key, value);
+			}
+
+			size++;
+			break;
+		}
+
 		return null;
 	}
 
