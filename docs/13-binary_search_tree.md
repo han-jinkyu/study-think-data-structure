@@ -30,6 +30,7 @@ private Node findNode(Object target) {
     - findNode에서 target은 null은 유효한 키 값이 아니다
 - compareTo 메서드를 호출하기 전에 target 인자를 형변환하여 Comparable 객체로 만들어야 한다.
 
+
 ## 값 탐색하기
 
 ```java
@@ -61,6 +62,7 @@ private boolean containsValueHelper(Node node, Object target) {
     - 세 번쨰 if문은 왼쪽 하위 트리에서 target을 찾는 재귀적인 호출을 한다.
     - 네 번째 if문은 오른쪽 하위 트리에서 target을 찾는 재귀적은 호출을 한다.
 - 모든 노드를 방문하므로 실행시간은 노드에 반비례한다.
+
 
 ## put 메서드 구현하기
 
@@ -115,6 +117,46 @@ private V putHelper(Node node, K key, V value) {
         - 왼쪽 하위 트리가 비었다면 바닥에 이른 것이므로 새로운 노드를 생성하여 추가한다.
         - 왼쪽 하위 트리가 비어 있지 않다면 검색을 위해 재귀 호출을 한다.
     - cmp > 0이면 주어진 키가 크므로 오른쪽으로 가야 한다. 
+    
+
+## 중위 순회
+
+```java
+@Override
+public Set<K> keySet() {
+    Set<K> set = new LinkedHashSet<K>();
+    addInOrder(root, set);
+    return set;
+}
+
+private void addInOrder(Node node, Set<K> set) {
+    if (node == null) return;
+    addInOrder(node.left, set);
+    set.add(node.key);
+    addInOrder(node.right, set);
+}
+```
+
+- keySet 메서드는 요소의 순서를 유지하는 Set 구현체인 LinkedHashSet을 사용한다.
+- addInOrder 메서드는 중위 순회(in-order traversal)를 실행한다.
+    1. 왼쪽 하위 트리를 순서대로 순회
+    2. node.key를 추가한다
+    3. 오른쪽 하위 트리를 순서대로 순회
+- 트리에 있는 모든 노드를 방문하므로 실행시간은 n에 비례한다.
+
+
+## 로그 시간 메서드
+
+- 대부분 응용 프로그램에서 트리가 가득 찬다는 보장을 할 수 없다.
+- 시간순으로 put의 값을 넣게 되면 불균형 트리가 생성되며 실행시간은 n에 비례하게 된다.
+
+
+## 자가 균형 트리
+
+- 뷸균형 트리에 대한 문제는 두 가지 해법이 가능하다.
+    - Map 객체에 키를 순서대로 넣지 않는다.
+    - 키가 순서대로 들어오더라고 이를 대응한다.
+- 두번째 해법이 더 좋으며 이를 해결하는 방법은 `AVL 트리`와 자바의 TreeMap에서 사용하는 `레드-블랙 트리(red-black tree)`가 있다. [위키참조](https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree)
 
 ---
 [Home](../README.md)
