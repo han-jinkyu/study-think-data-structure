@@ -1,1 +1,1 @@
-<put your key here>
+redis://:@localhost:6379

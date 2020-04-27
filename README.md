@@ -18,7 +18,7 @@ https://github.com/yudong80/ThinkDataStructures
 11. [HashMap 클래스](docs/11-class_hash_map.md)
 12. [TreeMap 클래스](docs/12-class_tree_map.md)
 13. [이진 탐색 트리](docs/13-binary_search_tree.md)
-14. 영속성
+14. [영속성](docs/14-persistence.md)
 15. 위키피디아 크롤링
 16. 불리언 검색
 17. 정렬
