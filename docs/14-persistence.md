@@ -27,5 +27,67 @@ $ docker run --name my-redis -p 6379:6379 -d redis
 $ docker ps
 ```
 
+## 레디스 기반 인덱스 만들기
+
+아래는 이번에 실습할 파일들이다.
+- JedisMaker.java
+- JedisIndex.java
+- JedisIndexTest.java
+- WikiFetcher.java
+
+아래는 이전에 실습한 파일들이다.
+- Index.java
+- TermCounter.java
+- WikiNodeIterable.java
+
+## 레디스 데이터 타입
+레디스는 기본적으로 String 타입의 키와 다양한 데이터 중 하나를 넣을 수 있는 맵 구조로 되어 있다.
+
+```java
+// String
+jedis.set("mykey", "myvalue");
+String value = jedis.get("mykey");
+System.out.println("Got value: " + value);
+```
+- Map.put 메서드와 유사한 jedis.set을 사용하여 String 값을 넣는다.
+
+```java
+// Set
+jedis.sadd("myset", "element1", "element2", "element3");
+System.out.println("element2 is member: " + jedis.sismember("myset", "element2"));
+```
+
+- 자바의 Set<String>과 유사한 `set` 구조.
+- Jedis.sadd를 호출하여 추가할 수 있다.
+- set이 존재하지 않으면 레디스가 생성한다.
+- Jedis.sismember 메서드는 요소가 존재하는지를 검사하며, 상수 시간 연산이다.
+
+```java
+// List
+jedis.rpush("mylist", "element1", "element2", "element3");
+System.out.println("element at index 1: " + jedis.lindex("mylist", 1));
+```
+
+- 자바의 List<String>과 유사한 `list` 구조.
+- Jedis.rpush 메서드는 list의 오른쪽 끝에 요소를 추가한다.
+- list 역시 존재하지 않으면 레디스가 생성한다.
+- Jedis.lindex 메서드는 정수 인덱스를 받아 지정된 요소를 반환하며, 상수 시간 연산이다.
+
+
+```java
+// Hash
+jedis.hset("myhash", "word1", Integer.toString(2));
+jedis.hincrBy("myhash", "word2", 1);
+System.out.println("frequency of word1: " + jedis.hget("myhash", "word1"));
+System.out.println("frequency of word2: " + jedis.hget("myhash", "word2"));
+```
+
+- 자바의 Map<String, String>과 유사한 `hash` 구조.
+- Jedis.hset 메서드는 hash에 새로운 엔트리를 추가한다.
+- String 값을 저장하므로 Jedis.hget을 호출하였다면 형변환해야 한다.
+- `hash` 구조의 두 번째 키를 `필드`라고 부른다.
+- Jedis.hincryby 메서드 같은 특별한 메서드도 있어서 필드의 값을 정수로 취급하여 늘려준다.
+- `hash`에 엔트리를 넣고 가져오고 증가시키는 작업은 모두 상수 시간 연산이다.
+
 ---
 [Home](../README.md)
