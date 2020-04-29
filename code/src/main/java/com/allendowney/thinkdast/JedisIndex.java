@@ -1,14 +1,11 @@
 package com.allendowney.thinkdast;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.stream.Collectors;
 
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import redis.clients.jedis.Jedis;
@@ -77,8 +74,7 @@ public class JedisIndex {
 	 * @return Set of URLs.
 	 */
 	public Set<String> getURLs(String term) {
-        // FILL THIS IN!
-		return null;
+		return jedis.smembers(urlSetKey(term));
 	}
 
     /**
@@ -88,8 +84,10 @@ public class JedisIndex {
 	 * @return Map from URL to count.
 	 */
 	public Map<String, Integer> getCounts(String term) {
-        // FILL THIS IN!
-		return null;
+		Set<String> urls = getURLs(term);
+		return urls.stream()
+			.map(url -> new AbstractMap.SimpleEntry<>(url, getCount(url, term)))
+			.collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
 	}
 
     /**
@@ -100,8 +98,9 @@ public class JedisIndex {
 	 * @return
 	 */
 	public Integer getCount(String url, String term) {
-        // FILL THIS IN!
-		return null;
+		String value = jedis.hget(termCounterKey(url), term);
+		if (value == null || value.isEmpty()) return 0;
+		return Integer.parseInt(value);
 	}
 
 	/**
@@ -111,7 +110,13 @@ public class JedisIndex {
 	 * @param paragraphs  Collection of elements that should be indexed.
 	 */
 	public void indexPage(String url, Elements paragraphs) {
-		// TODO: FILL THIS IN!
+		TermCounter tc = new TermCounter(url);
+		tc.processElements(paragraphs);
+
+		for (String term : tc.keySet()) {
+			add(term, tc);
+			jedis.hset(termCounterKey(url), term, tc.get(term).toString());
+		}
 	}
 
 	/**

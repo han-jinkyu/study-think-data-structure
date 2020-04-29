@@ -89,5 +89,10 @@ System.out.println("frequency of word2: " + jedis.hget("myhash", "word2"));
 - Jedis.hincryby 메서드 같은 특별한 메서드도 있어서 필드의 값을 정수로 취급하여 늘려준다.
 - `hash`에 엔트리를 넣고 가져오고 증가시키는 작업은 모두 상수 시간 연산이다.
 
+## 실습
+- JedisIndex.java
+    - indexPage
+    - getCounts
+
 ---
 [Home](../README.md)

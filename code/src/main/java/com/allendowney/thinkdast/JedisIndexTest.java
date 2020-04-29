@@ -31,6 +31,10 @@ public class JedisIndexTest {
 		jedis = JedisMaker.make();
 		index = new JedisIndex(jedis);
 
+		index.deleteAllKeys();
+		index.deleteTermCounters();
+		index.deleteURLSets();
+
 		loadIndex(index);
 	}
 
