@@ -1,12 +1,16 @@
 package com.allendowney.thinkdast;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import redis.clients.jedis.Jedis;
@@ -55,8 +59,15 @@ public class WikiCrawler {
 	 * @throws IOException
 	 */
 	public String crawl(boolean testing) throws IOException {
-		// TODO: FILL THIS IN!
-        return null;
+		String url = queue.poll();
+		if (!testing && index.isIndexed(url)) {
+			return null;
+		}
+
+		Elements paragraphs = testing ? wf.readWikipedia(url) : wf.fetchWikipedia(url);
+		index.indexPage(url, paragraphs);
+		queueInternalLinks(paragraphs);
+        return url;
 	}
 
 	/**
@@ -66,7 +77,12 @@ public class WikiCrawler {
 	 */
 	// NOTE: absence of access level modifier means package-level
 	void queueInternalLinks(Elements paragraphs) {
-        // TODO: FILL THIS IN!
+		List<String> urls = paragraphs.select("a[href]")
+			.stream()
+			.filter(elem -> elem.attr("href").startsWith("/wiki"))
+			.map(elem -> elem.absUrl("href"))
+			.collect(Collectors.toList());
+		queue.addAll(urls);
 	}
 
 	public static void main(String[] args) throws IOException {

@@ -116,8 +116,8 @@ public class JedisIndex {
 		Transaction t = jedis.multi();
 
 		for (String term : tc.keySet()) {
-			add(term, tc);
-			jedis.hset(termCounterKey(url), term, tc.get(term).toString());
+			t.sadd(urlSetKey(term), tc.getLabel());
+			t.hset(termCounterKey(url), term, tc.get(term).toString());
 		}
 
 		t.exec();

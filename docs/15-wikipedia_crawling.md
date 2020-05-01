@@ -90,6 +90,38 @@ N개의 페이지를 인덱싱하고 M개의 고유한 검색어를 검색하는
         - 선입선출(FIFO) 큐 => 너비 우선 탐색(breadth-first traversal)
         - 후입선출(LIFO) 스택 => 깊이 우선 탐색(depth-first traversal)
         - 일반적으로 컬렉션에 있는 엔트리에 우선순위를 부여할 수 있다.
+        
+
+## 실습
+
+- WikiCrawler.java
+```java
+public String crawl(boolean testing) throws IOException {
+    String url = queue.poll();
+    if (!testing && index.isIndexed(url)) {
+        return null;
+    }
+
+    Elements paragraphs = testing 
+        ? wf.readWikipedia(url) 
+        : wf.fetchWikipedia(url);
+    index.indexPage(url, paragraphs);
+    queueInternalLinks(paragraphs);
+    return url;
+}
+
+void queueInternalLinks(Elements paragraphs) {
+    List<String> urls = paragraphs.select("a[href]")
+        .stream()
+        .filter(elem -> elem.attr("href").startsWith("/wiki"))
+        .map(elem -> elem.absUrl("href"))
+        .collect(Collectors.toList());
+    queue.addAll(urls);
+}
+```
+
+- WikiCrawlerTest.java
+- JedisIndex.java
 
 ---
 [Home](../README.md)
