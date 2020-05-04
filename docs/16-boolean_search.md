@@ -36,7 +36,7 @@
 - `-`: 차집합 (difference)
 
 
-# 실습
+## 실습
 
 - WikiSearch.java
 - WikiSearchTest.java
@@ -47,6 +47,16 @@
     - `단일 검색어`를 포함한 쿼리일 때, 페이지의 관련성은 `TF`다. 즉, 페이지에 검색어가 등장한 횟수다.
     - `다수의 검색어`를 포함한 쿼리일 때, 페이지의 관련성은 `TF의 합`이다. 즉, 검색어가 등장한 총 횟수다. 
 - 일반적인 관련성 점수는 `용어 빈도-역 문서 빈도(term frequency-inverse documents frequency)`를 나타내는 [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf)이다
+
+
+## Comparable과 Comparator
+
+- Comparable 인터페이스는 `compareTo 메서드`를 제공한다.
+    - compareTo 메서드의 명세는 this가 that보다 작으면 음수를 반환하고, this가 더 크면 양수를 반환하고, 두 개가 같으면 0을 반환하게 되어 있다.
+- Comparable 인터페이스를 구현하고 있다면 Collections.sort 메서드를 이용하여 정렬할 수 있다.
+    - 인자로 컬렉션만 넘긴다면 `자연 순서(natural order)`로 정렬한다.
+    - 다른 순서로 정렬하고 싶다면 `Comparator 객체`를 주입하여 다른 순서로 정렬할 수 있다.
+- Comparator 객체를 정의한다면 `compare 메서드`를 구현할 수 있다. 
 
 ---
 [Home](../README.md)
