@@ -1,13 +1,9 @@
 package com.allendowney.thinkdast;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import redis.clients.jedis.Jedis;
 
@@ -54,14 +50,33 @@ public class WikiSearch {
 	}
 
 	/**
+	 * Combines key sets of two search results.
+	 * @param that
+	 * @return New key set.
+	 */
+	private Set<String> combineKeySets(WikiSearch that) {
+		Set<String> keySet = new HashSet<>();
+		keySet.addAll(this.map.keySet());
+		keySet.addAll(that.map.keySet());
+		return keySet;
+	}
+
+	/**
 	 * Computes the union of two search results.
 	 *
 	 * @param that
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch or(WikiSearch that) {
-		// TODO: FILL THIS IN!
-		return null;
+		Map<String, Integer> map = new HashMap<>();
+
+		for (String key : combineKeySets(that)) {
+			Integer thisScore = this.map.getOrDefault(key, 0);
+			Integer thatScore = that.map.getOrDefault(key, 0);
+			map.put(key, thisScore + thatScore);
+		}
+
+		return new WikiSearch(map);
 	}
 
 	/**
@@ -71,8 +86,18 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch and(WikiSearch that) {
-		// TODO: FILL THIS IN!
-		return null;
+		Map<String, Integer> map = new HashMap<>();
+
+		for (String key : combineKeySets(that)) {
+			Integer thisScore = this.map.getOrDefault(key, 0);
+			Integer thatScore = that.map.getOrDefault(key, 0);
+
+			Integer computed = thisScore == 0 || thatScore == 0
+					? 0 : thisScore + thatScore;
+			map.put(key, computed);
+		}
+
+		return new WikiSearch(map);
 	}
 
 	/**
@@ -82,8 +107,17 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch minus(WikiSearch that) {
-		// TODO: FILL THIS IN!
-		return null;
+		Map<String, Integer> map = new HashMap<>();
+
+		for (String key : combineKeySets(that)) {
+			Integer thisScore = this.map.getOrDefault(key, 0);
+			Integer thatScore = that.map.getOrDefault(key, 0);
+
+			Integer computed = Math.max(thisScore - thatScore, 0);
+			map.put(key, computed);
+		}
+
+		return new WikiSearch(map);
 	}
 
 	/**
@@ -104,10 +138,10 @@ public class WikiSearch {
 	 * @return List of entries with URL and relevance.
 	 */
 	public List<Entry<String, Integer>> sort() {
-		// TODO: FILL THIS IN!
-		return null;
+		return map.entrySet().stream()
+			.sorted(Entry.comparingByValue())
+			.collect(Collectors.toList());
 	}
-
 
 	/**
 	 * Performs a search and makes a WikiSearch object.

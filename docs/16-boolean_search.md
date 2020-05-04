@@ -36,5 +36,17 @@
 - `-`: 차집합 (difference)
 
 
+# 실습
+
+- WikiSearch.java
+- WikiSearchTest.java
+- Card.java
+
+- 정보 검색의 관점에서 `관련성 점수(relevance score)`는 쿼리에서 추론한 사용자의 요구를 페이지가 얼마나 잘 반영하였는지를 나타낸 점수다.
+- 관련성 점수를 매기는 대부분의 방법은 어떤 페이지에 검색어가 몇 번이나 등장하였는지를 의미하는 `용어 빈도(term frequency)`에 기반을 둔다.
+    - `단일 검색어`를 포함한 쿼리일 때, 페이지의 관련성은 `TF`다. 즉, 페이지에 검색어가 등장한 횟수다.
+    - `다수의 검색어`를 포함한 쿼리일 때, 페이지의 관련성은 `TF의 합`이다. 즉, 검색어가 등장한 총 횟수다. 
+- 일반적인 관련성 점수는 `용어 빈도-역 문서 빈도(term frequency-inverse documents frequency)`를 나타내는 [TF-IDF](https://en.wikipedia.org/wiki/Tf–idf)이다
+
 ---
 [Home](../README.md)
