@@ -20,5 +20,5 @@ https://github.com/yudong80/ThinkDataStructures
 13. [이진 탐색 트리](docs/13-binary_search_tree.md)
 14. [영속성](docs/14-persistence.md)
 15. [위키피디아 크롤링](docs/15-wikipedia_crawling.md)
-16. 불리언 검색
+16. [불리언 검색](docs/16-boolean_search.md)
 17. 정렬
