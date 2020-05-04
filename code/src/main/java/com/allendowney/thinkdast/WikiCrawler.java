@@ -59,6 +59,10 @@ public class WikiCrawler {
 	 * @throws IOException
 	 */
 	public String crawl(boolean testing) throws IOException {
+		if (queue.isEmpty()) {
+			return null;
+		}
+
 		String url = queue.poll();
 		if (!testing && index.isIndexed(url)) {
 			return null;
