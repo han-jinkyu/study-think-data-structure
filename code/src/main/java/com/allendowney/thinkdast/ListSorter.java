@@ -60,8 +60,17 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
-		// TODO:
-		return null;
+		if (list.size() <= 1) {
+			return list;
+		}
+
+		List<T> list1 = new LinkedList<>(list.subList(0, list.size() / 2));
+		List<T> list2 = new LinkedList<>(list.subList(list.size() / 2, list.size()));
+
+		List<T> sorted1 = mergeSort(list1, comparator);
+		List<T> sorted2 = mergeSort(list2, comparator);
+
+		return merge(sorted1, sorted2, comparator);
 	}
 
 	/**

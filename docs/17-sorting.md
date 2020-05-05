@@ -42,5 +42,28 @@ public void insertionSort(List<T> list, Comparator<T> comparator) {
     2. 구현이 단순하므로 오버헤드가 작다. 즉, 실행시간은 최대 an^2이지만 최대 차수의 계수인 a는 아마도 작을 것이다.
 
 
+## 실습
+
+- ListSorter.java
+- ListSorterTest.java
+
+> 합병 정렬 또는 병합 정렬(merge sort)은 O(n log n) 비교 기반 정렬 알고리즘이다. 일반적인 방법으로 구현했을 때 이 정렬은 안정 정렬에 속하며, 분할 정복 알고리즘의 하나이다. [위키 참조](https://ko.wikipedia.org/wiki/합병_정렬)
+
+```java
+public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
+    if (list.size() <= 1) {
+        return list;
+    }
+
+    List<T> list1 = new LinkedList<>(list.subList(0, list.size() / 2));
+    List<T> list2 = new LinkedList<>(list.subList(list.size() / 2, list.size()));
+
+    List<T> sorted1 = mergeSort(list1, comparator);
+    List<T> sorted2 = mergeSort(list2, comparator);
+
+    return merge(sorted1, sorted2, comparator);
+}
+```
+
 ---
 [Home](../README.md)
